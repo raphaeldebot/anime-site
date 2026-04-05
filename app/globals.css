@@ -1,26 +1,125 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05070b;
+  --foreground: #f5f7fb;
+
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.12);
+
+  --muted: #b5bdd0;
+  --muted-soft: #7f8aa3;
+
+  --accent: #8b5cf6;
+  --accent-2: #ec4899;
+  --accent-3: #22c55e;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="razer"] {
+  --background: #030504;
+  --foreground: #f3fff6;
+
+  --surface: rgba(120, 255, 160, 0.05);
+  --surface-strong: rgba(120, 255, 160, 0.1);
+  --border: rgba(120, 255, 160, 0.18);
+
+  --muted: #b7c8bb;
+  --muted-soft: #6f8b76;
+
+  --accent: #44ff88;
+  --accent-2: #0f6;
+  --accent-3: #163d22;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="franxx"] {
+  --background: #09050a;
+  --foreground: #fff4f8;
+
+  --surface: rgba(255, 120, 170, 0.06);
+  --surface-strong: rgba(255, 120, 170, 0.1);
+  --border: rgba(255, 120, 170, 0.16);
+
+  --muted: #d8b8c4;
+  --muted-soft: #9a7482;
+
+  --accent: #ff4d8d;
+  --accent-2: #ff7aa8;
+  --accent-3: #7c3aed;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 28%),
+    radial-gradient(circle at 85% 18%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 24%),
+    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 30%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: white;
+}
+
+@keyframes neon-border-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.neon-card {
+  position: relative;
+  display: block;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.neon-card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.85s ease;
+  z-index: 0;
+}
+
+.neon-card-border::before {
+  content: "";
+  position: absolute;
+  inset: -140%;
+  background: conic-gradient(from 0deg,
+      color-mix(in srgb, var(--accent) 92%, white) 0deg,
+      transparent 55deg,
+      transparent 185deg,
+      color-mix(in srgb, var(--accent-2) 90%, white) 235deg,
+      color-mix(in srgb, var(--accent-3) 86%, white) 290deg,
+      color-mix(in srgb, var(--accent) 92%, white) 340deg,
+      color-mix(in srgb, var(--accent-2) 88%, white) 360deg);
+  animation: neon-border-spin 6s linear infinite;
+  filter: blur(0.4px);
+opacity: 0.95;
+}
+
+.neon-card-inner {
+  position: relative;
+  margin: 1.8px;
+  border-radius: calc(2rem - 1.5px);
+  overflow: hidden;
+  background: rgba(8, 8, 12, 0.96);
+  z-index: 1;
+}
+
+.neon-card:hover .neon-card-border {
+  opacity: 1;
 }

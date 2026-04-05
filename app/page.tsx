@@ -1,4 +1,6 @@
+import Link from "next/link";
 import Header from "@/components/Header";
+import { fetchTrendingAnime } from "@/lib/anilist";
 
 const envies = [
   "Romance",
@@ -11,31 +13,9 @@ const envies = [
   "Mystère",
 ];
 
-const nouveautes = [
-  {
-    titre: "Nouvel anime à découvrir",
-    type: "Anime",
-    genre: "Action • Fantasy",
-    description:
-      "Une fiche mise en avant avec l'image, le résumé, les personnages clés et les infos utiles.",
-  },
-  {
-    titre: "Webtoon du moment",
-    type: "Webtoon",
-    genre: "Romance • Drame",
-    description:
-      "Une autre fiche pour présenter les nouveautés et aider à trouver rapidement quelque chose à lire.",
-  },
-  {
-    titre: "Sortie récente",
-    type: "Anime",
-    genre: "Mystère • Surnaturel",
-    description:
-      "Cette zone pourra ensuite être reliée à de vraies données, filtres ou recommandations.",
-  },
-];
+export default async function Home() {
+  const nouveautes = await fetchTrendingAnime();
 
-export default function Home() {
   return (
     <>
       <Header />
@@ -56,22 +36,6 @@ export default function Home() {
               aux idées de personnages, à la pratique du dessin, aux nouveautés
               anime et webtoon, et à la communauté.
             </p>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="/"
-                className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:opacity-90"
-              >
-                Découvrir
-              </a>
-
-              <a
-                href="/"
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10"
-              >
-                Voir les nouveautés
-              </a>
-            </div>
           </div>
         </section>
 
@@ -81,7 +45,7 @@ export default function Home() {
               Découvrir selon tes envies
             </p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Trouve un anime ou un webtoon selon ton mood
+              Trouve un anime selon ton mood
             </h2>
           </div>
 
@@ -100,31 +64,45 @@ export default function Home() {
         <section className="mx-auto max-w-5xl px-6 py-20">
           <div className="mb-10">
             <p className="mb-2 text-sm uppercase tracking-[0.3em] text-zinc-400">
-              Nouveautés anime & webtoon
+              Nouveautés anime
             </p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Les dernières découvertes mises en avant
+              Tendances du moment
             </h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            {nouveautes.map((item) => (
-              <article
-                key={item.titre}
-                className="rounded-3xl border border-white/10 bg-zinc-900/60 p-6"
+            {nouveautes.map((anime: any) => (
+              <Link
+                key={anime.id}
+                href={`/anime/${anime.id}`}
+                className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/60 transition hover:-translate-y-1 hover:border-white/20 hover:bg-zinc-900/80"
               >
-                <p className="mb-3 text-xs uppercase tracking-[0.2em] text-zinc-400">
-                  {item.type}
-                </p>
+                <img
+                  src={anime.coverImage?.large}
+                  alt={anime.title?.english || anime.title?.romaji}
+                  className="h-80 w-full object-cover"
+                />
 
-                <h3 className="mb-3 text-xl font-semibold">{item.titre}</h3>
+                <div className="p-6">
+                  <p className="mb-2 text-xs uppercase tracking-[0.2em] text-zinc-400">
+                    {anime.season} {anime.seasonYear}
+                  </p>
 
-                <p className="mb-4 text-sm text-zinc-400">{item.genre}</p>
+                  <h3 className="mb-3 text-xl font-semibold">
+                    {anime.title?.english || anime.title?.romaji}
+                  </h3>
 
-                <p className="text-sm leading-7 text-zinc-300">
-                  {item.description}
-                </p>
-              </article>
+                  <p className="mb-4 text-sm text-zinc-400">
+                    {anime.genres?.slice(0, 3).join(" • ")}
+                  </p>
+
+                  <div className="space-y-2 text-sm text-zinc-300">
+                    {anime.averageScore && <p>Score : {anime.averageScore}/100</p>}
+                    {anime.episodes && <p>Épisodes : {anime.episodes}</p>}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </section>

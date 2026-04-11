@@ -3,7 +3,7 @@ const ANILIST_API_URL = "https://graphql.anilist.co";
 export async function fetchTrendingAnime() {
   const query = `
     query {
-      Page(page: 1, perPage: 12) {
+      Page(page: 1, perPage: 24) {
         media(sort: TRENDING_DESC, type: ANIME) {
           id
           title {

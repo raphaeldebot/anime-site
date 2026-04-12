@@ -2,6 +2,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { fetchTrendingAnime } from "@/lib/anilist";
 import TrendingSlider from "@/components/TrendingSlider";
+import MoodExplorer from "@/components/MoodExplorer";
+import { DISCOVER_MOODS } from "@/lib/anilist";
 const envies = [
   "Romance",
   "Fantasy",
@@ -60,18 +62,19 @@ export default async function Home() {
             </p>
 
             <div className="flex flex-wrap gap-3">
-              {envies.map((envie) => (
-                <button
-                  key={envie}
+              {DISCOVER_MOODS.map((mood) => (
+                <Link
+                  key={mood.slug}
+                  href={`/discover?mood=${mood.slug}`}
                   className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200 backdrop-blur-xl transition hover:bg-white/10"
                 >
-                  {envie}
-                </button>
+                  {mood.title}
+                </Link>
               ))}
             </div>
           </div>
         </section>
-
+              <MoodExplorer />
         <TrendingSlider nouveautes={nouveautes} />
       </main>
     </>
